@@ -14,6 +14,7 @@ const CardBackImage = () => (
   <img src={process.env.PUBLIC_URL + `/SVG-cards/png/1x/back.png`} />
 );
 
+// Component for rendering a card image based on its suit and rank
 const CardImage = ({ suit, rank }: Card) => {
   const card = rank === CardRank.Ace ? 1 : rank;
   return (
@@ -41,12 +42,14 @@ const shuffle = (deck: CardDeck): CardDeck => {
   return deck.sort(() => Math.random() - 0.5);
 };
 
+// Take a card from the top of the deck and return the remaining deck
 const takeCard = (deck: CardDeck): { card: Card; remaining: CardDeck } => {
   const card = deck[deck.length - 1];
   const remaining = deck.slice(0, deck.length - 1);
   return { card, remaining };
 };
 
+// Set up the initial game state
 const setupGame = (): GameState => {
   const cardDeck = shuffle(newCardDeck());
   return {
@@ -58,15 +61,18 @@ const setupGame = (): GameState => {
 };
 
 //Scoring
+// TODO: Calculate the score of a hand, consider the value of Aces and face cards
 const calculateHandScore = (hand: Hand): number => {
   return 0;
 };
 
+// TODO: Determine the game outcome based on the player's and dealer's scores
 const determineGameResult = (state: GameState): GameResult => {
   return "no_result";
 };
 
 //Player Actions
+// TODO: Execute the "Stand" action for the player, allowing the dealer to take cards until their score is 17 or higher
 const playerStands = (state: GameState): GameState => {
   return {
     ...state,
@@ -74,6 +80,7 @@ const playerStands = (state: GameState): GameState => {
   };
 };
 
+// TODO: Execute the "Hit" action for the player, taking a card from the deck and adding it to the player's hand
 const playerHits = (state: GameState): GameState => {
   const { card, remaining } = takeCard(state.cardDeck);
   return {
@@ -86,6 +93,12 @@ const playerHits = (state: GameState): GameState => {
 //UI Component
 const Game = (): JSX.Element => {
   const [state, setState] = useState(setupGame());
+
+  // TODO: Handle the "Hit" action for the player
+
+  // TODO: Handle the "Stand" action for the player
+
+  // TODO: Handle the "Reset" action to start a new game
 
   return (
     <>
