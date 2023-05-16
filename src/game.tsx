@@ -61,9 +61,34 @@ const setupGame = (): GameState => {
 };
 
 //Scoring
-// TODO: Calculate the score of a hand, consider the value of Aces and face cards
+// Calculate the score of a hand, consider the value of Aces and face cards
 const calculateHandScore = (hand: Hand): number => {
-  return 0;
+  let score = 0;
+  let numOfAces = 0;
+
+  for (const card of hand) {
+    switch (card.rank) {
+      case CardRank.Ace:
+        score += 11;
+        numOfAces++;
+        break;
+      case CardRank.Jack:
+      case CardRank.Queen:
+      case CardRank.King:
+        score += 10;
+        break;
+      default:
+        score += parseInt(card.rank);
+        break;
+    }
+  }
+
+  while (score > 21 && numOfAces > 0) {
+    score -= 10;
+    numOfAces--;
+  }
+
+  return score;
 };
 
 // TODO: Determine the game outcome based on the player's and dealer's scores
