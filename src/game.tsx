@@ -71,18 +71,19 @@ const calculateHandScore = (hand: Hand): number => {
       case CardRank.Ace:
         score += 11;
         numOfAces++;
-        break;
+        break; // Ace is worth 11 by default
       case CardRank.Jack:
       case CardRank.Queen:
       case CardRank.King:
         score += 10;
-        break;
+        break; // Face cards are worth 10
       default:
         score += parseInt(card.rank);
-        break;
+        break; // Number cards are worth their face value
     }
   }
 
+  // If the score is over 21 and there are Aces in the hand, convert the value of the Aces to 1
   while (score > 21 && numOfAces > 0) {
     score -= 10;
     numOfAces--;
@@ -93,8 +94,36 @@ const calculateHandScore = (hand: Hand): number => {
 
 // TODO: Determine the game outcome based on the player's and dealer's scores
 const determineGameResult = (state: GameState): GameResult => {
-  return "no_result";
+  const playerScore = calculateHandScore(state.playerHand);
+  const dealerScore = calculateHandScore(state.dealerHand);
+
+  if (
+    playerScore === 21 &&
+    state.playerHand.length === 2 &&
+    state.dealerHand.length !== 2
+  ) {
+    return "player_win"; // Player has blackjack, dealer doesn't have blackjack
+  }
+
+  if (playerScore > 21) {
+    return "dealer_win"; // Player busts
+  }
+
+  if (dealerScore > 21) {
+    return "player_win"; // Dealer busts
+  }
+
+  if (playerScore === dealerScore) {
+    return "draw"; // Player and dealer have the same score
+  }
+
+  if (playerScore > dealerScore) {
+    return "player_win"; // Player has higher score than dealer
+  }
+
+  return "dealer_win"; // Dealer has higher score than player
 };
+
 
 //Player Actions
 // TODO: Execute the "Stand" action for the player, allowing the dealer to take cards until their score is 17 or higher
@@ -105,7 +134,7 @@ const playerStands = (state: GameState): GameState => {
   };
 };
 
-// TODO: Execute the "Hit" action for the player, taking a card from the deck and adding it to the player's hand
+// Execute the "Hit" action for the player, taking a card from the deck and adding it to the player's hand
 const playerHits = (state: GameState): GameState => {
   const { card, remaining } = takeCard(state.cardDeck);
   return {
