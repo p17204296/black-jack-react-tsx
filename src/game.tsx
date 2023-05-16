@@ -7,6 +7,7 @@ import {
   GameState,
   Hand,
   GameResult,
+  Turn,
 } from "./types";
 
 //UI Elements
@@ -124,14 +125,26 @@ const determineGameResult = (state: GameState): GameResult => {
   return "dealer_win"; // Dealer has higher score than player
 };
 
-
 //Player Actions
-// TODO: Execute the "Stand" action for the player, allowing the dealer to take cards until their score is 17 or higher
+// Execute the "Stand" action for the player, allowing the dealer to take cards until their score is 17 or higher
 const playerStands = (state: GameState): GameState => {
-  return {
-    ...state,
-    turn: "dealer_turn",
+  // Implement the dealer's turn
+  let newState = {
+    ...state, // Copy the state
+    turn: "dealer_turn" as Turn, // Change the turn to the dealer
   };
+
+  // Dealer takes cards until their score is 17 or higher
+  while (calculateHandScore(newState.dealerHand) <= 16) {
+    const { card, remaining } = takeCard(newState.cardDeck); // Take a card from the deck
+    newState = {
+      ...newState,
+      cardDeck: remaining,
+      dealerHand: [...newState.dealerHand, card],
+    }; // Add the card to the dealer's hand
+  }
+
+  return newState as GameState; // Return the new state
 };
 
 // Execute the "Hit" action for the player, taking a card from the deck and adding it to the player's hand
