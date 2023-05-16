@@ -12,7 +12,9 @@ import {
 
 //UI Elements
 const CardBackImage = () => (
-  <img src={process.env.PUBLIC_URL + `/SVG-cards/png/1x/back.png`} />
+  <img src={process.env.PUBLIC_URL + `/SVG-cards/png/1x/back.png`} 
+  alt="Card Back" // added alt text for liniting & accessibility
+  />
 );
 
 // Component for rendering a card image based on its suit and rank
@@ -24,6 +26,7 @@ const CardImage = ({ suit, rank }: Card) => {
         process.env.PUBLIC_URL +
         `/SVG-cards/png/1x/${suit.slice(0, -1)}_${card}.png`
       }
+      alt={`${rank} of ${suit}`} // added alt text for liniting & accessibility
     />
   );
 };
@@ -214,7 +217,7 @@ const Game = (): JSX.Element => {
         </div>
       )}
       {state.turn === "dealer_turn" &&
-      determineGameResult(state) != "no_result" ? (
+      determineGameResult(state) !== "no_result" ? (
         <p>{determineGameResult(state)}</p>
       ) : (
         <p>{state.turn}</p>
