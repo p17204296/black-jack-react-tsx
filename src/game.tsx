@@ -139,9 +139,9 @@ const playerStands = (state: GameState): GameState => {
     const { card, remaining } = takeCard(newState.cardDeck); // Take a card from the deck
     newState = {
       ...newState,
-      cardDeck: remaining,
-      dealerHand: [...newState.dealerHand, card],
-    }; // Add the card to the dealer's hand
+      cardDeck: remaining, // Update the deck
+      dealerHand: [...newState.dealerHand, card], // Add the card to the dealer's hand
+    };
   }
 
   return newState as GameState; // Return the new state
@@ -161,11 +161,22 @@ const playerHits = (state: GameState): GameState => {
 const Game = (): JSX.Element => {
   const [state, setState] = useState(setupGame());
 
-  // TODO: Handle the "Hit" action for the player
+  // Handle the "Hit" action for the player
+  const handlePlayerHits = (): void => {
+    const newState = playerHits(state); // Execute the "Hit" action
+    setState(newState); // Update the state
+  };
 
-  // TODO: Handle the "Stand" action for the player
-
-  // TODO: Handle the "Reset" action to start a new game
+  // Handle the "Stand" action for the player
+  const handlePlayerStands = (): void => {
+    const newState = playerStands(state); // Execute the "Stand" action
+    setState(newState); // Update the state
+  };
+  // Handle the "Reset" action to start a new game
+  const handleReset = (): void => {
+    const newState = setupGame(); // Set up a new game
+    setState(newState); // Update the state
+  };
 
   return (
     <>
@@ -173,17 +184,17 @@ const Game = (): JSX.Element => {
         <p>There are {state.cardDeck.length} cards left in deck</p>
         <button
           disabled={state.turn === "dealer_turn"}
-          onClick={(): void => setState(playerHits)}
+          onClick={handlePlayerHits}
         >
           Hit
         </button>
         <button
           disabled={state.turn === "dealer_turn"}
-          onClick={(): void => setState(playerStands)}
+          onClick={handlePlayerStands}
         >
           Stand
         </button>
-        <button onClick={(): void => setState(setupGame())}>Reset</button>
+        <button onClick={handleReset}>Reset</button>
       </div>
       <p>Player Cards</p>
       <div>
